@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KarierKita | Portal Karier Mahasiswa</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="nav">
+        <a class="brand" href="#">Karier<span>Kita.</span></a>
+
+        <nav>
+          <a href="#">Beranda</a>
+          <a href="#lowongan">Lowongan</a>
+          <a href="#tentang">Tentang</a>
+          <a href="#tips">Tips Karier</a>
+        </nav>
+
+        <button class="btn btn-outline" onclick="showSaved()">
+          ♡ Favorit <span id="favCount">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <span class="eyebrow">LANGKAH KECIL, MASA DEPAN BESAR</span>
+          <h1>Temukan peluang.<br />Mulai kariermu.</h1>
+          <p>
+            Portal informasi lowongan kerja dan magang untuk mahasiswa serta
+            lulusan baru. Temukan peluang yang sesuai dengan minatmu.
+          </p>
+
+          <div class="search">
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Cari posisi atau perusahaan..."
+              aria-label="Cari lowongan"
+            />
+            <button class="btn" onclick="renderJobs()">Cari Lowongan</button>
+          </div>
+
+          <div class="hero-note">
+            ✓ Mudah digunakan &nbsp; ✓ Pilihan karier beragam
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="illustration">📩</div>
+          <span class="eyebrow">MULAI DARI SINI</span>
+          <h2>Kesempatan baru menantimu!</h2>
+          <p>
+            Bangun pengalaman dan temukan langkah pertama menuju karier impian.
+          </p>
+          <button
+            class="btn btn-light"
+            onclick="
+              document
+                .querySelector('#lowongan')
+                .scrollIntoView({ behavior: 'smooth' })
+            "
+          >
+            Jelajahi Lowongan →
+          </button>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div class="stat">
+          <span class="stat-icon">▤</span>
+          <div>
+            <strong id="jobCount">6</strong>
+            <p>Contoh lowongan</p>
+          </div>
+        </div>
+        <div class="stat">
+          <span class="stat-icon">✦</span>
+          <div>
+            <strong>3 kategori</strong>
+            <p>Kerja, magang, remote</p>
+          </div>
+        </div>
+        <div class="stat">
+          <span class="stat-icon">✓</span>
+          <div>
+            <strong>Gratis</strong>
+            <p>Untuk pencari peluang</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="lowongan">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow blue-text">TEMUKAN PELUANGMU</span>
+            <h2>Lowongan pilihan</h2>
+            <p>Pilih peluang yang sesuai dengan langkah kariermu.</p>
+          </div>
+        </div>
+
+        <div class="filters">
+          <button class="chip active" onclick="setFilter('Semua', this)">
+            Semua
+          </button>
+          <button class="chip" onclick="setFilter('Magang', this)">
+            Magang
+          </button>
+          <button class="chip" onclick="setFilter('Full-time', this)">
+            Full-time
+          </button>
+          <button class="chip" onclick="setFilter('Remote', this)">
+            Remote
+          </button>
+          <button class="chip" onclick="showSaved()">♥ Favorit</button>
+        </div>
+
+        <div class="jobs" id="jobs"></div>
+      </section>
+
+      <section class="info" id="tentang">
+        <article class="infobox">
+          <span class="info-icon">🎯</span>
+          <h3>Kenapa KarierKita?</h3>
+          <p>
+            Membantu mahasiswa dan lulusan baru menemukan informasi peluang
+            karier melalui tampilan yang sederhana dan mudah dipahami.
+          </p>
+        </article>
+
+        <article class="infobox" id="tips">
+          <span class="info-icon">💡</span>
+          <h3>Tips sebelum melamar</h3>
+          <p>
+            Siapkan CV yang rapi, periksa persyaratan, gunakan email
+            profesional, dan pastikan informasi lowongan dapat dipercaya.
+          </p>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <a class="brand footer-brand" href="#">Karier<span>Kita.</span></a>
+      <p>Temukan peluang. Mulai kariermu.</p>
+      
+      </small>
+    </footer>
+
+    <div
+      class="modal"
+      id="modal"
+      onclick="if (event.target === this) closeModal();"
+    >
+      <div class="modalbox">
+        <button class="close" onclick="closeModal()" aria-label="Tutup">
+          &times;
+        </button>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+
+    <script>
+      const jobs = [
+        {
+          id: 1,
+          title: "UI/UX Design Intern",
+          company: "Kreasi Digital",
+          category: "Magang",
+          location: "Yogyakarta · Hybrid",
+          salary: "Rp1–2 juta/bulan",
+          initial: "K",
+          desc: "Membantu tim merancang alur pengguna, wireframe, dan prototipe aplikasi digital.",
+          requirements:
+            "Memahami dasar UI/UX, memiliki portofolio sederhana, komunikatif, dan mau belajar.",
+        },
+        {
+          id: 2,
+          title: "Junior Web Developer",
+          company: "Nusa Teknologi",
+          category: "Full-time",
+          location: "Semarang · On-site",
+          salary: "Rp4–6 juta/bulan",
+          initial: "N",
+          desc: "Mendukung pengembangan dan pemeliharaan website bersama tim developer.",
+          requirements:
+            "Memahami HTML, CSS, JavaScript dasar, dan mampu bekerja dalam tim.",
+        },
+        {
+          id: 3,
+          title: "Social Media Intern",
+          company: "Ruang Kreatif",
+          category: "Magang",
+          location: "Remote",
+          salary: "Rp800 ribu–1,5 juta/bulan",
+          initial: "R",
+          desc: "Membantu membuat kalender konten dan mengevaluasi performa media sosial.",
+          requirements:
+            "Tertarik pada media sosial, mampu menulis caption, dan memahami desain dasar.",
+        },
+        {
+          id: 4,
+          title: "Data Entry Assistant",
+          company: "Arunika Niaga",
+          category: "Full-time",
+          location: "Purbalingga · On-site",
+          salary: "Rp2,5–3,5 juta/bulan",
+          initial: "A",
+          desc: "Memasukkan dan memeriksa data operasional serta merapikan dokumen digital.",
+          requirements:
+            "Teliti, memahami spreadsheet dasar, dan mampu mengatur dokumen.",
+        },
+        {
+          id: 5,
+          title: "Content Writer Intern",
+          company: "Kata Studio",
+          category: "Remote",
+          location: "Remote · Fleksibel",
+          salary: "Rp1 juta/bulan",
+          initial: "K",
+          desc: "Menulis artikel dan konten informatif berdasarkan brief serta melakukan riset ringan.",
+          requirements:
+            "Mampu menulis dengan baik, teliti, dan bersedia menerima masukan.",
+        },
+        {
+          id: 6,
+          title: "Customer Support",
+          company: "Sahabat Digital",
+          category: "Full-time",
+          location: "Remote · Indonesia",
+          salary: "Rp3–4 juta/bulan",
+          initial: "S",
+          desc: "Membantu menjawab pertanyaan pelanggan melalui kanal digital.",
+          requirements:
+            "Komunikatif, sabar, mampu menulis dengan jelas, dan terbiasa menggunakan komputer.",
+        },
+      ];
+
+      let filter = "Semua";
+      let savedOnly = false;
+      let favorites = [];
+
+      try {
+        favorites = JSON.parse(localStorage.getItem("karierkita-fav") || "[]");
+        if (!Array.isArray(favorites)) favorites = [];
+      } catch (error) {
+        favorites = [];
+      }
+
+      function renderJobs() {
+        const input = document.getElementById("searchInput");
+        const query = input.value.toLowerCase().trim();
+
+        let list = jobs.filter((job) => {
+          const text = (
+            job.title +
+            " " +
+            job.company +
+            " " +
+            job.location +
+            " " +
+            job.category
+          ).toLowerCase();
+
+          const matchCategory = filter === "Semua" || job.category === filter;
+
+          return matchCategory && text.includes(query);
+        });
+
+        if (savedOnly) {
+          list = list.filter((job) => favorites.includes(job.id));
+        }
+
+        document.getElementById("jobCount").textContent = list.length;
+
+        document.getElementById("jobs").innerHTML = list.length
+          ? list
+              .map(
+                (job) => `
+      <article class="job">
+        <div class="jobtop">
+          <div class="logo">${job.initial}</div>
+          <button
+            class="save ${favorites.includes(job.id) ? "saved" : ""}"
+            onclick="toggleFav(${job.id})"
+            aria-label="Simpan favorit">
+            ${favorites.includes(job.id) ? "♥" : "♡"}
+          </button>
+        </div>
+
+        <h3>${job.title}</h3>
+        <div class="company">${job.company}</div>
+
+        <div class="tags">
+          <span class="tag">${job.category}</span>
+          <span class="tag">${job.location}</span>
+        </div>
+
+        <div class="jobfoot">
+          <span class="salary">${job.salary}</span>
+          <button class="detail" onclick="showDetail(${job.id})">
+            Lihat detail →
+          </button>
+        </div>
+      </article>
+    `,
+              )
+              .join("")
+          : `<div class="empty">
+        Tidak ada lowongan yang cocok. Coba kata kunci lain.
+       </div>`;
+      }
+
+      function setFilter(value, element) {
+        filter = value;
+        savedOnly = false;
+
+        document.querySelectorAll(".chip").forEach((chip) => {
+          chip.classList.remove("active");
+        });
+
+        if (element) element.classList.add("active");
+        renderJobs();
+      }
+
+      function toggleFav(id) {
+        if (favorites.includes(id)) {
+          favorites = favorites.filter((item) => item !== id);
+        } else {
+          favorites.push(id);
+        }
+
+        try {
+          localStorage.setItem("karierkita-fav", JSON.stringify(favorites));
+        } catch (error) {
+          console.warn("Favorit tidak dapat disimpan di browser.");
+        }
+
+        document.getElementById("favCount").textContent = favorites.length;
+        renderJobs();
+      }
+
+      function showSaved() {
+        savedOnly = true;
+        filter = "Semua";
+
+        document.querySelectorAll(".chip").forEach((chip) => {
+          chip.classList.remove("active");
+        });
+
+        renderJobs();
+        document
+          .getElementById("lowongan")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      function showDetail(id) {
+        const job = jobs.find((item) => item.id === id);
+        if (!job) return;
+
+        document.getElementById("modalContent").innerHTML = `
+    <span class="eyebrow blue-text">${job.category}</span>
+    <h2>${job.title}</h2>
+    <strong>${job.company}</strong>
+    <p>📍 ${job.location}<br>💰 ${job.salary}</p>
+    <h3>Deskripsi pekerjaan</h3>
+    <p>${job.desc}</p>
+    <h3>Persyaratan contoh</h3>
+    <p>${job.requirements}</p>
+    <p class="notice">
+      Informasi ini merupakan data contoh untuk demonstrasi website,
+      bukan lowongan aktif yang telah diverifikasi.
+    </p>
+    <button class="btn" onclick="toggleFav(${job.id});closeModal()">
+      ♡ Simpan ke Favorit
+    </button>
+  `;
+
+        document.getElementById("modal").classList.add("show");
+      }
+
+      function closeModal() {
+        document.getElementById("modal").classList.remove("show");
+      }
+
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", renderJobs);
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeModal();
+      });
+
+      document.getElementById("favCount").textContent = favorites.length;
+      renderJobs();
+    </script>
+  </body>
+</html>
